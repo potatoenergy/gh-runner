@@ -1,0 +1,38 @@
+---
+services:
+  gh-runner:
+    build:
+      args:
+        - RUNNER_VERSION=${RUNNER_VERSION}
+      context: .
+      dockerfile: Dockerfile
+    container_name: gh-runner
+    deploy:
+      replicas: ${REPLICAS}
+    env_file:
+      - .env
+    environment:
+      - EPHEMERAL
+      - RUNNER_LABELS
+      - RUNNER_NAME
+      - RUNNER_TOKEN
+      - RUNNER_URL
+      - RUNNER_WORK
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test: [ "CMD", "/bin/sh", "-c", "test -f /tmp/runner_health" ]
+      timeout: 5s
+    image: gh-runner:${RUNNER_VERSION}
+    logging:
+      driver: json-file
+      options:
+        max-file: '2'
+        max-size: 5m
+    restart: unless-stopped
+    volumes:
+      - runner_cache:/home/runner/.cache
+volumes:
+  runner_cache:
+    driver: local

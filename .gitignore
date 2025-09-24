@@ -1,0 +1,29 @@
+# Secrets and env
+.env
+.env.local
+secrets.* 
+*.pem
+*.key
+
+# Build artifacts
+runner.tar.gz
+runner.zip
+*.tar.gz
+
+# Docker
+**/node_modules
+**/.cache
+docker-compose.override.yml
+docker-compose.*.yml
+docker-compose.local.yml
+
+# Local runner data
+runner_cache/
+*.log
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+thumbs.db
+*.swp
