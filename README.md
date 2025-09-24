@@ -95,16 +95,43 @@ armv7  → linux-arm
 
 ## Deployment
 
-**Build and push:**
+### 1. Build the Runner Image
+
+Build the multi-architecture Docker image locally:
+
 ```bash
 docker compose -f gh-runner/docker-compose.yml build
-docker push ghcr.io/owner/gh-runner:2.328.0
 ```
 
-**Run with Docker Compose:**
+This creates a local Docker image with the specified runner version.
+
+### 2. Start the Runner Service
+
+Launch the runner container in the background:
+
 ```bash
 docker compose -f gh-runner/docker-compose.yml up -d
 ```
+
+The runner will automatically:
+- Register with GitHub using your provided token
+- Start listening for workflow jobs
+- Create a health check file when ready
+- Unregister itself on container shutdown
+
+### 3. Scale Your Runners (Optional)
+
+To run multiple instances simultaneously:
+
+```bash
+# Update .env file
+REPLICAS=3
+
+# Recreate the service
+docker compose -f gh-runner/docker-compose.yml up -d --force-recreate
+```
+
+This creates 3 identical runners that can handle multiple concurrent workflows.
 
 ## Scaling Configuration
 
